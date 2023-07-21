@@ -80,42 +80,103 @@ export const TodoList = ({ data }: TodoListProps) => {
     onSuccess: () => {
       apiContext.todo.getAll.refetch()
     },
+    onError: () => {
+      // Do somthing
+    },
   })
 
   const { mutate: checkedTodo } = api.todoStatus.update.useMutation({
     onSuccess: () => {
       apiContext.todo.getAll.refetch()
     },
+    onError: () => {
+      // Do somthing
+    },
   })
 
   return (
     <>
       <ul className="grid grid-cols-1 gap-y-3" ref={animationParent}>
-        {data.map((todo) => (
+        {data.length === 0 ? (
+          <span className="text-center uppercase text-gray-500">
+            No todos yet
+          </span>
+        ) : (
+          data.map((todo) => (
+            <li key={todo.id}>
+              <div
+                className={`${
+                  todo.status === 'completed' ? 'bg-[#F8FAFC]' : ''
+                } flex items-center justify-between gap-2 rounded-12 border border-gray-200 px-4 py-3 shadow-sm`}
+              >
+                <div className="flex items-center">
+                  <div>
+                    <Checkbox.Root
+                      id={String(todo.id)}
+                      checked={todo.status === 'completed'}
+                      onClick={() =>
+                        checkedTodo({
+                          todoId: todo.id,
+                          status:
+                            todo.status === 'completed'
+                              ? 'pending'
+                              : 'completed',
+                        })
+                      }
+                      className="flex h-6 w-6 items-center justify-center rounded-6 border border-gray-300 focus:border-gray-700 focus:outline-none data-[state=checked]:border-gray-700 data-[state=checked]:bg-gray-700"
+                    >
+                      <Checkbox.Indicator>
+                        <CheckIcon className="h-4 w-4 text-white" />
+                      </Checkbox.Indicator>
+                    </Checkbox.Root>
+                  </div>
+                  <label
+                    className={`block pl-3 font-medium ${
+                      todo.status === 'completed'
+                        ? 'text-[#64748B] line-through'
+                        : 'text-[#334155]'
+                    }`}
+                    htmlFor={String(todo.id)}
+                  >
+                    {todo.body}
+                  </label>
+                </div>
+                <div>
+                  <XMarkIcon
+                    className="h-6 w-6 cursor-pointer text-gray-400"
+                    onClick={() => deleteTodo({ id: todo.id })}
+                  />
+                </div>
+              </div>
+            </li>
+          ))
+        )}
+        {/* {data.map((todo) => (
           <li key={todo.id}>
             <div
               className={`${
                 todo.status === 'completed' ? 'bg-[#F8FAFC]' : ''
-              } flex justify-between rounded-12 border border-gray-200 px-4 py-3 shadow-sm`}
+              } flex items-center justify-between gap-2 rounded-12 border border-gray-200 px-4 py-3 shadow-sm`}
             >
               <div className="flex items-center">
-                <Checkbox.Root
-                  id={String(todo.id)}
-                  checked={todo.status === 'completed'}
-                  onClick={() =>
-                    checkedTodo({
-                      todoId: todo.id,
-                      status:
-                        todo.status === 'completed' ? 'pending' : 'completed',
-                    })
-                  }
-                  className="flex h-6 w-6 items-center justify-center rounded-6 border border-gray-300 focus:border-gray-700 focus:outline-none data-[state=checked]:border-gray-700 data-[state=checked]:bg-gray-700"
-                >
-                  <Checkbox.Indicator>
-                    <CheckIcon className="h-4 w-4 text-white" />
-                  </Checkbox.Indicator>
-                </Checkbox.Root>
-
+                <div>
+                  <Checkbox.Root
+                    id={String(todo.id)}
+                    checked={todo.status === 'completed'}
+                    onClick={() =>
+                      checkedTodo({
+                        todoId: todo.id,
+                        status:
+                          todo.status === 'completed' ? 'pending' : 'completed',
+                      })
+                    }
+                    className="flex h-6 w-6 items-center justify-center rounded-6 border border-gray-300 focus:border-gray-700 focus:outline-none data-[state=checked]:border-gray-700 data-[state=checked]:bg-gray-700"
+                  >
+                    <Checkbox.Indicator>
+                      <CheckIcon className="h-4 w-4 text-white" />
+                    </Checkbox.Indicator>
+                  </Checkbox.Root>
+                </div>
                 <label
                   className={`block pl-3 font-medium ${
                     todo.status === 'completed'
@@ -127,13 +188,15 @@ export const TodoList = ({ data }: TodoListProps) => {
                   {todo.body}
                 </label>
               </div>
-              <XMarkIcon
-                className="h-6 w-6 cursor-pointer text-gray-400"
-                onClick={() => deleteTodo({ id: todo.id })}
-              />
+              <div>
+                <XMarkIcon
+                  className="h-6 w-6 cursor-pointer text-gray-400"
+                  onClick={() => deleteTodo({ id: todo.id })}
+                />
+              </div>
             </div>
           </li>
-        ))}
+        ))} */}
       </ul>
     </>
   )

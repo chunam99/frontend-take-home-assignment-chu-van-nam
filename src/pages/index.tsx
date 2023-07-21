@@ -33,8 +33,12 @@ const Index = () => {
   })
 
   const sortedItems = [...todos].sort((a, b) => {
-    if (a.status === 'pending' && b.status === 'completed') return -1
-    if (a.status === 'completed' && b.status === 'pending') return 1
+    if (a.status === 'pending' && b.status === 'completed') {
+      return -1
+    }
+    if (a.status === 'completed' && b.status === 'pending') {
+      return 1
+    }
     return 0
   })
 
